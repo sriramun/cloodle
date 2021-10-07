@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+set -e
+export WORKDIR=$(cd $(dirname $0) && pwd)
+
+. $WORKDIR/common
+
+
+Usage() {
+
+    echo $'Usage: \n\nCommands: \n'
+}
+
+Help() {
+    
+    echo $'Cloodle (Moodle CLI)\nGitHub: \nVersion:' $(cat $WORKDIR/VERSION) $'\n'
+    Usage
+}
+
+
+# https://stackoverflow.com/a/5230306
+if ! options=$(getopt -o hl: -l help,login: -- "$@"); then
+    exit 1
+fi
+
+set -- $options
+
+while [ $# -gt 0 ]; do
+    
+    # echo "in loop $0 $1 $2"
+    case $1 in
+        
+        -h|--help)
+            Help
+            ;;
+
+        -l|--login)
+            . $WORKDIR/commands/lmsLogin
+            Login
+            shift
+            ;;
+
+        (--)
+            shift
+            exit 0
+            ;;
+
+        (-*)
+            echo "$0: error - unrecognized option $1" 1>&2; 
+            Usage
+            exit 1
+            ;;
+           
+        (*)
+            Usage
+            break;;
+    esac
+    shift
+done
+
+Usage
+

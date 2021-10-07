@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+
+Login() {
+    
+    . $WORKDIR/common
+
+    if [ ! $DOMAIN ]; then
+        read -p "Domain Name: " domain
+        EditConfig DOMAIN $domain $CONFIG
+    fi
+    
+    read -p "Username: " username
+    read -s -p "Password: " password; echo
+
+    token=$(curl --silent \
+        -d username=${username} \
+        -d password=${password} \
+        "${DOMAIN}/login/token.php?service=moodle_mobile_app" | \
+        ${JSONPARSER} token)
+        # python3 -c "import sys, json; try: print(json.load(sys.stdin)['token']); except: print("")")
+    
+    if [ $token ]; then
+        EditConfig WSTOKEN $token $CONFIG
+    else
+        echo "Invalid credentials!"
+    fi
+}
