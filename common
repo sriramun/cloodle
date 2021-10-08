@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-CONFIG=$WORKDIR/config
-JSONPARSER=$WORKDIR/jsonParser.py
 
 . $CONFIG
 
@@ -9,5 +7,12 @@ EditConfig() {
 
     # https://stackoverflow.com/a/2464883
     sed -i "s/\($1 *= *\).*/\1$2/" $3
+}
+
+MakeLog() {
+
+    scriptName=${0##*/}
+    timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+    echo "== $scriptName $timestamp $1"
 }
 

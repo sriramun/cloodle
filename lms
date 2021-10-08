@@ -2,55 +2,55 @@
 
 set -e
 export WORKDIR=$(cd $(dirname $0) && pwd)
+export JSONPARSER=$WORKDIR/jsonParser.py
+if [ ! -f "$WORKDIR/config" ]; then
+    cp $WORKDIR/config.template $WORKDIR/config
+fi
+export CONFIG=$WORKDIR/config
 
 . $WORKDIR/common
 
 
 Usage() {
-
     echo $'Usage: \n\nCommands: \n'
 }
-
 Help() {
-    
+
     echo $'Cloodle (Moodle CLI)\nGitHub: \nVersion:' $(cat $WORKDIR/VERSION) $'\n'
     Usage
 }
 
-
 # https://stackoverflow.com/a/5230306
-if ! options=$(getopt -o hl: -l help,login: -- "$@"); then
+if ! options=$(getopt -u -o ca: -l course,asgn: -- "$@"); then
     exit 1
 fi
 
 set -- $options
 
+# display flags
+aFlag=0
+cFlag=0
+
 while [ $# -gt 0 ]; do
     
     # echo "in loop $0 $1 $2"
     case $1 in
-        
-        -h|--help)
-            Help
+        -c|--course)
+            cFlag=1            
             ;;
-
-        -l|--login)
-            . $WORKDIR/commands/lmsLogin
-            Login
+        -a|--asgn)
+            aFlag=1
             shift
             ;;
-
         (--)
             shift
-            exit 0
+            break
             ;;
-
         (-*)
             echo "$0: error - unrecognized option $1" 1>&2; 
             Usage
             exit 1
             ;;
-           
         (*)
             Usage
             break;;
@@ -58,5 +58,19 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-Usage
-
+case "$1" in
+    help)
+        Help
+        exit 0
+        ;;
+    login)
+        . $WORKDIR/commands/lmsLogin
+        Login
+        exit 0
+        ;;
+    *)
+        echo "Invalid command $1!"
+        Usage
+        exit 1
+        ;;
+esac
