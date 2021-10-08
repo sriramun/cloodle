@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# https://stackoverflow.com/a/33077717
+Parser() {
+python3 <(
+cat << "END"
+
+import os
+import sys
+import json
+
+#try:
+data = json.load(sys.stdin)
+
+aFlag = int(os.environ['aFlag'])
+
+if not aFlag:
+    
+    print('ID] Course Name')
+
+    for i in data['courses']:
+        print(str(i['id']), end='] ')
+        print(i['fullname'])
+
+#except:
+#    print("Oops")
+
+END
+)
+}
+
+Display() {
+
+    . $WORKDIR/common
+
+    if [[ ! $WSTOKEN || ! $DOMAIN ]]; then
+        echo "Login first!"
+        exit 1
+    fi
+
+    # https://unix.stackexchange.com/a/164548
+    IFS=
+    echo -e $(curl --silent \
+        -d wstoken=${WSTOKEN} \
+        -d wsfunction="core_course_get_enrolled_courses_by_timeline_classification" \
+        -d classification="inprogress" \
+        "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json" | \
+        Parser)
+}
