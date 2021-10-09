@@ -66,17 +66,17 @@ Upload() {
             -F "file_1=@${pVal}" \
             "${DOMAIN}/webservice/upload.php?token=${WSTOKEN}" | \
             python3 -c "import sys, json; print(json.load(sys.stdin)[0]['itemid']);")
+    
+        res=$(curl --silent \
+            -d wstoken="${WSTOKEN}" \
+            -d wsfunction="mod_assign_save_submission" \
+            -d assignmentid=${aVal} \
+            -d plugindata[onlinetext_editor][text]=sometext \
+            -d plugindata[onlinetext_editor][format]=1 \
+            -d plugindata[onlinetext_editor][itemid]=${itemid} \
+            -d plugindata[files_filemanager]=${itemid} \
+            "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json")
     fi
-
-    res=$(curl --silent \
-        -d wstoken="${WSTOKEN}" \
-        -d wsfunction="mod_assign_save_submission" \
-        -d assignmentid=${aVal} \
-        -d plugindata[onlinetext_editor][text]=sometext \
-        -d plugindata[onlinetext_editor][format]=1 \
-        -d plugindata[onlinetext_editor][itemid]=${itemid} \
-        -d plugindata[files_filemanager]=${itemid} \
-        "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json")
 
     echo "Upload success!"
 
