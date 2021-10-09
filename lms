@@ -11,22 +11,23 @@ export CONFIG=$WORKDIR/config
 . $WORKDIR/common
 
 # options and values
-export aFlag=0
-export cFlag=0
+export aFlag=0 #asgn flag
+export pFlag=0 #path flag
+export fFlag=0 #force flag
 
-export aVal=0
+export aVal=0 #id
+export pVal=0 #path
 
 Usage() {
     echo $'Usage: \n\nCommands: \n'
 }
 Help() {
-
     echo $'Cloodle (Moodle CLI)\nGitHub: \nVersion:' $(cat $WORKDIR/VERSION) $'\n'
     Usage
 }
 
 # https://stackoverflow.com/a/5230306
-if ! options=$(getopt -u -o ca: -l course,asgn: -- "$@"); then
+if ! options=$(getopt -u -o fp:a: -l force,path:,asgn: -- "$@"); then
     exit 1
 fi
 
@@ -36,13 +37,18 @@ while [ $# -gt 0 ]; do
     
     # echo "in loop $0 $1 $2"
     case $1 in
-        -c|--course)
-            cFlag=1            
-            ;;
         -a|--asgn)
             aFlag=1
             aVal=$2
             shift
+            ;;
+        -p|--path)
+            pFlag=1
+            pVal=$2
+            shift
+            ;;
+        -f|--force)
+            fFlag=1
             ;;
         (--)
             shift
@@ -66,17 +72,22 @@ case "$1" in
         exit 0
         ;;
     login)
-        . $WORKDIR/commands/lmsLogin
+        . $WORKDIR/commands/Login
         Login
         exit 0
         ;;
     display)
-        . $WORKDIR/commands/lmsDisplay
+        . $WORKDIR/commands/Display
         Display
         exit 0
         ;;
+    upload)
+        . $WORKDIR/commands/Upload
+        Upload
+        exit 0
+        ;;
     *)
-        echo "Invalid command $1!"
+        echo "$0: error - unrecognized command $1" 1>&2;
         Usage
         exit 1
         ;;

@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+
+Parser() {
+python3 <(
+cat << "END"
+
+import os
+import sys
+import json
+
+data = json.load(sys.stdin)
+
+submission = data['lastattempt']['submission']
+locked = data['lastattempt']['locked']
+graded = data['lastattempt']['graded']
+canedit = data['lastattempt']['canedit']
+
+#if not int(os.environ['pFlag']):
+print('Status: ' + submission['status'])
+print('Locked: ' + str(locked))
+print('Graded: ' + str(graded), end='')
+if graded:
+    print(' | ' + data['feedback']['grade']['grade'], end='')
+print()
+print('Can Edit: ' + str(data['lastattempt']['canedit']))
+
+if data['lastattempt']['submission']['status'] == 'submitted':
+    print('\nSubmissions: ')
+    for i in data['lastattempt']['submission']['plugins'][0]['fileareas'][0]['files']:
+        print(i['filepath']+i['filename'])
+
+END
+)
+}
+
+Upload() {
+    
+    . $WORKDIR/common
+
+    IFS=
+
+    if [[ ! $WSTOKEN || ! $DOMAIN ]]; then
+        echo "Login first!"
+        exit 1
+    fi
+
+    if [ $aFlag == 0 ]; then
+        echo "Arguments missing!"
+        echo "Use the 'help' command for more information"
+        exit 1
+    fi
+    
+    if [ $pFlag == 0 ]; then
+        echo -e $(curl --silent \
+           -d wstoken=${WSTOKEN} \
+           -d wsfunction="mod_assign_get_submission_status" \
+           -d assignid=${aVal} \
+           "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json" | \
+           #python3 -m json.tool)
+           Parser)
+           return
+    fi
+
+
+}

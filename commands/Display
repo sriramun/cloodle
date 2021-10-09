@@ -25,12 +25,12 @@ if not aFlag:
 
 else:
     
-    print('ID] Assignment')
+    print('ID] Assignment Name')
 
     for i in data:
         for j in i['modules']:
             if j['modname'] == 'assign':
-                print(str(j['id']), end='] ')
+                print(str(j['instance']), end='] ')
                 print(j['name'])
 
 #except:

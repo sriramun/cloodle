@@ -25,7 +25,7 @@ Login() {
     
     . $WORKDIR/common
 
-    if [ ! $DOMAIN ]; then
+    if [[ ! $DOMAIN || $fFlag == 1 ]]; then
         read -p "Domain Name: " domain
         EditConfig DOMAIN $domain $CONFIG
     fi
