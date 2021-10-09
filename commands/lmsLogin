@@ -33,7 +33,8 @@ Login() {
     read -p "Username: " username
     read -s -p "Password: " password; echo
 
-    echo ${DOMAIN}
+    # bug: login doesn't work the first time
+    # also need to enable redirect feature
     token=$(curl --silent \
         -d username=${username} \
         -d password=${password} \

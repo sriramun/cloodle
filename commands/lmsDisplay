@@ -10,6 +10,7 @@ import sys
 import json
 
 #try:
+
 data = json.load(sys.stdin)
 
 aFlag = int(os.environ['aFlag'])
@@ -21,6 +22,16 @@ if not aFlag:
     for i in data['courses']:
         print(str(i['id']), end='] ')
         print(i['fullname'])
+
+else:
+    
+    print('ID] Assignment')
+
+    for i in data:
+        for j in i['modules']:
+            if j['modname'] == 'assign':
+                print(str(j['id']), end='] ')
+                print(j['name'])
 
 #except:
 #    print("Oops")
@@ -40,10 +51,21 @@ Display() {
 
     # https://unix.stackexchange.com/a/164548
     IFS=
-    echo -e $(curl --silent \
-        -d wstoken=${WSTOKEN} \
-        -d wsfunction="core_course_get_enrolled_courses_by_timeline_classification" \
-        -d classification="inprogress" \
-        "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json" | \
-        Parser)
+
+    if [ $aFlag == 0 ]; then
+        echo -e $(curl --silent \
+             -d wstoken=${WSTOKEN} \
+             -d wsfunction="core_course_get_enrolled_courses_by_timeline_classification" \
+             -d classification="inprogress" \
+             "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json" | \
+             Parser)
+    else
+        echo -e $(curl --silent \
+           -d wstoken=${WSTOKEN} \
+           -d wsfunction="core_course_get_contents" \
+           -d courseid=${aVal} \
+           "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json" | \
+           #python3 -m json.tool)
+           Parser)
+    fi
 }
