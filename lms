@@ -2,7 +2,6 @@
 
 set -e
 export WORKDIR=$(cd $(dirname $0) && pwd)
-export JSONPARSER=$WORKDIR/jsonParser.py
 if [ ! -f "$WORKDIR/config" ]; then
     cp $WORKDIR/config.template $WORKDIR/config
 fi
