@@ -43,19 +43,19 @@ Commands:
 
 [(-f) login]
     Enter credentials
-    Use required option to reset domain name
+    Full login (optional)
 
 [(-c) display]
     Display current enrolled courses
-    Use required option to display assignments specific to course
+    Display assignments specific to course (optional)
 
 [(-p) -a upload]
     Display assignment details
-    Use required option to upload a single file to assignment 
+    Upload a single file to assignment (optional)
 
 [(-p) -a download]
     Display assignment file names
-    Use required option to specify download path
+    Download to specified download path (optional)
     
 END
 }
