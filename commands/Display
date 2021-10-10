@@ -13,9 +13,9 @@ import json
 
 data = json.load(sys.stdin)
 
-aFlag = int(os.environ['aFlag'])
+cFlag = int(os.environ['cFlag'])
 
-if not aFlag:
+if not cFlag:
     
     print('ID] Course Name')
 
@@ -52,7 +52,7 @@ Display() {
     # https://unix.stackexchange.com/a/164548
     IFS=
 
-    if [ $aFlag == 0 ]; then
+    if [ $cFlag == 0 ]; then
         echo -e $(curl --silent \
              -d wstoken=${WSTOKEN} \
              -d wsfunction="core_course_get_enrolled_courses_by_timeline_classification" \
@@ -63,7 +63,7 @@ Display() {
         echo -e $(curl --silent \
            -d wstoken=${WSTOKEN} \
            -d wsfunction="core_course_get_contents" \
-           -d courseid=${aVal} \
+           -d courseid=${cVal} \
            "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json" | \
            #python3 -m json.tool)
            Parser)

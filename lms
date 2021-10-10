@@ -10,23 +10,58 @@ export CONFIG=$WORKDIR/config
 . $WORKDIR/common
 
 # options and values
+export cFlag=0 #course flag
 export aFlag=0 #asgn flag
 export pFlag=0 #path flag
 export fFlag=0 #force flag
 
+export cVal=0 #id
 export aVal=0 #id
 export pVal=0 #path
 
-Usage() {
-    echo $'Usage: \n\nCommands: \n'
+Usage() {    
+cat << END 
+Usage: lms [options...] [command] 
+
+-c, --course <value>
+    Set course-id to <value>
+
+-a,--asgn <value>
+    Set assignment-id to <value>
+
+-p,--path <value>
+    Set path of file to <value>
+
+-f,--force
+    Reset data before action
+
+
+Commands:
+
+[help]
+    Help
+
+[(-f) login]
+    Enter credentials
+    Use required option to reset domain name
+
+[(-c) display]
+    Display current enrolled courses
+    Use required option to display assignments specific to course
+
+[(-p) -a upload]
+    Display assignment details
+    Use required option to upload a single file to assignment 
+    
+END
 }
 Help() {
-    echo $'Cloodle (Moodle CLI)\nGitHub: \nVersion:' $(cat $WORKDIR/VERSION) $'\n'
+    echo $'Cloodle (Moodle CLI)\nGitHub: https://github.com/sriramun/cloodle\nVersion:' $(cat $WORKDIR/VERSION) $'\n'
     Usage
 }
 
 # https://stackoverflow.com/a/5230306
-if ! options=$(getopt -u -o fp:a: -l force,path:,asgn: -- "$@"); then
+if ! options=$(getopt -u -o fp:a:c: -l force,path:,asgn:,course: -- "$@"); then
     exit 1
 fi
 
@@ -36,6 +71,11 @@ while [ $# -gt 0 ]; do
     
     # echo "in loop $0 $1 $2"
     case $1 in
+        -c|--course)
+            cFlag=1
+            cVal=$2
+            shift
+            ;;
         -a|--asgn)
             aFlag=1
             aVal=$2
@@ -55,11 +95,11 @@ while [ $# -gt 0 ]; do
             ;;
         (-*)
             echo "$0: error - unrecognized option $1" 1>&2; 
-            Usage
+            echo "Use the 'help' command for usage information"
             exit 1
             ;;
         (*)
-            Usage
+            echo "Use the 'help' command for usage information"
             break;;
     esac
     shift
@@ -87,7 +127,7 @@ case "$1" in
         ;;
     *)
         echo "$0: error - unrecognized command $1" 1>&2;
-        Usage
+        echo "Use the 'help' command for usage information"
         exit 1
         ;;
 esac
