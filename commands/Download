@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+
+Parser() {
+python3 <(
+cat << "END"
+
+import os
+import sys
+import json
+
+data = json.load(sys.stdin)
+
+# might need to improve efficiency if possible
+
+if os.environ['pFlag'] == '1':
+    gotoPath = 'cd ' + os.environ['pVal'] + ' && '
+    
+
+for course in data['courses']:
+    for asgn in course['assignments']:
+        if asgn['id'] == int(os.environ['aVal']):
+            for attach in asgn['introattachments']:
+                
+                print(attach['filepath'] + attach['filename'])
+                
+                if os.environ['pFlag'] == '1':
+                    os.system(gotoPath + 'curl --silent -O -d token="' + os.environ['token']  + '" ' + attach['fileurl'])
+
+END
+)
+}
+
+Download() {
+    
+    . $WORKDIR/common
+
+    IFS=
+
+    if [[ ! $WSTOKEN || ! $DOMAIN ]]; then
+        echo "Login first!"
+        exit 1
+    fi
+
+    if [ $aFlag == 0 ]; then
+        echo "Arguments missing!"
+        echo "Use the 'help' command for usage information"
+        exit 1
+    fi
+
+    export token=${WSTOKEN}
+    
+    echo -e $(curl --silent \
+        -d wstoken=${WSTOKEN} \
+        -d wsfunction="mod_assign_get_assignments" \
+        "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json" | \
+        Parser)
+        #python3 -c "import sys, json; print(json.load(sys.stdin)['courses'][0]['assignments'][0]['introattachments'][0]['fileurl']);")
+}

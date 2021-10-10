@@ -9,25 +9,29 @@ import os
 import sys
 import json
 
-data = json.load(sys.stdin)
+try:
+    data = json.load(sys.stdin)
 
-submission = data['lastattempt']['submission']
-locked = data['lastattempt']['locked']
-graded = data['lastattempt']['graded']
-canedit = data['lastattempt']['canedit']
+    submission = data['lastattempt']['submission']
+    locked = data['lastattempt']['locked']
+    graded = data['lastattempt']['graded']
+    canedit = data['lastattempt']['canedit']
 
-print('Status: ' + submission['status'])
-print('Locked: ' + str(locked))
-print('Graded: ' + str(graded), end='')
-if graded:
-    print(' | ' + data['feedback']['grade']['grade'], end='')
-print()
-print('Can Edit: ' + str(data['lastattempt']['canedit']))
+    print('Status: ' + submission['status'])
+    print('Locked: ' + str(locked))
+    print('Graded: ' + str(graded), end='')
+    if graded:
+        print(' | ' + data['feedback']['grade']['grade'], end='')
+    print()
+    print('Can Edit: ' + str(data['lastattempt']['canedit']))
 
-if data['lastattempt']['submission']['status'] == 'submitted':
-    print('\nSubmissions: ')
-    for i in data['lastattempt']['submission']['plugins'][0]['fileareas'][0]['files']:
-        print(i['filepath']+i['filename'])
+    if data['lastattempt']['submission']['status'] == 'submitted':
+        print('\nSubmissions: ')
+        for i in data['lastattempt']['submission']['plugins'][0]['fileareas'][0]['files']:
+            print(i['filepath']+i['filename'])
+
+except:
+    print("")
 
 END
 )
@@ -76,8 +80,8 @@ Upload() {
             -d plugindata[onlinetext_editor][itemid]=${itemid} \
             -d plugindata[files_filemanager]=${itemid} \
             "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json")
+
+
+        echo "Upload successful!"
     fi
-
-    echo "Upload successful!"
-
 }

@@ -30,7 +30,7 @@ Usage: lms [options...] [command]
     Set assignment-id to <value>
 
 -p,--path <value>
-    Set path of file to <value>
+    Set path to <value>
 
 -f,--force
     Reset data before action
@@ -52,6 +52,10 @@ Commands:
 [(-p) -a upload]
     Display assignment details
     Use required option to upload a single file to assignment 
+
+[(-p) -a download]
+    Display assignment file names
+    Use required option to specify download path
     
 END
 }
@@ -123,6 +127,11 @@ case "$1" in
     upload)
         . $WORKDIR/commands/Upload
         Upload
+        exit 0
+        ;;
+    download)
+        . $WORKDIR/commands/Download
+        Download
         exit 0
         ;;
     *)

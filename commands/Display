@@ -9,32 +9,32 @@ import os
 import sys
 import json
 
-#try:
+try:
 
-data = json.load(sys.stdin)
+    data = json.load(sys.stdin)
 
-cFlag = int(os.environ['cFlag'])
+    cFlag = int(os.environ['cFlag'])
 
-if not cFlag:
-    
-    print('ID] Course Name')
+    if not cFlag:
+        
+        print('ID] Course Name')
 
-    for i in data['courses']:
-        print(str(i['id']), end='] ')
-        print(i['fullname'])
+        for i in data['courses']:
+            print(str(i['id']), end='] ')
+            print(i['fullname'])
 
-else:
-    
-    print('ID] Assignment Name')
+    else:
+        
+        print('ID] Assignment Name')
 
-    for i in data:
-        for j in i['modules']:
-            if j['modname'] == 'assign':
-                print(str(j['instance']), end='] ')
-                print(j['name'])
+        for i in data:
+            for j in i['modules']:
+                if j['modname'] == 'assign':
+                    print(str(j['instance']), end='] ')
+                    print(j['name'])
 
-#except:
-#    print("Oops")
+except:
+    print("")
 
 END
 )
