@@ -78,6 +78,6 @@ Upload() {
             "${DOMAIN}/webservice/rest/server.php?moodlewsrestformat=json")
     fi
 
-    echo "Upload success!"
+    echo "Upload successful!"
 
 }

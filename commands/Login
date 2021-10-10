@@ -25,26 +25,28 @@ Login() {
     
     . $WORKDIR/common
 
+    domain=${DOMAIN}
+
     if [[ ! $DOMAIN || $fFlag == 1 ]]; then
-        read -p "Domain Name: " domain
+        read -p "URL: " domain
         EditConfig DOMAIN $domain $CONFIG
     fi
-    
+
     read -p "Username: " username
     read -s -p "Password: " password; echo
 
-    # bug: login doesn't work the first time
-    # also need to enable redirect feature
+    # need to enable redirect feature
     token=$(curl --silent \
         -d username=${username} \
         -d password=${password} \
-        "${DOMAIN}/login/token.php?service=moodle_mobile_app" | \
+        "${domain}/login/token.php?service=moodle_mobile_app" | \
         Parser)
-        #${JSONPARSER} Login)
     
     if [ $token ]; then
         EditConfig WSTOKEN $token $CONFIG
+        echo "Login successful!"
     else
         echo "Invalid credentials!"
+        exit 1
     fi
 }
